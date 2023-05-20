@@ -18,17 +18,17 @@
 			<form action="" method="POST">
 				<div class="form-group">
 					<label for="exampleInputEmail1">Email address</label>
-					<input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="メールアドレス">
+					<input required name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="メールアドレス">
 				</div>
 				<div class="form-group">
 					<label for="exampleInputPassword1">Password</label>
-					<input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="パスワード">
+					<input required name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="パスワード">
 				</div>
 				<div class="d-flex justify-content-between">
 					<button type="submit" class="btn btn-primary">ログイン</button>
 					<div class="btn-group" role="group" aria-label="Basic example">
-						<a href="" class="btn btn-outline-info mx-2">会員登録</a>
-						<a href="" class="btn btn-outline-info mx-2">パスワードを忘れた</a>
+						<a href="/register.php" class="btn btn-outline-info mx-2">会員登録</a>
+						<a href="/reset-pw" class="btn btn-outline-info mx-2">パスワードを忘れた</a>
 					</div>
 				</div>
 			</form>
@@ -44,7 +44,7 @@
 				$conn = new mysqli($servername, $username, $password, $dbname);
 
 				if ($conn->connect_error) {
-						die("MySQL 연결 실패: " . $conn->connect_error);
+					die("MySQL接続失敗: " . $conn->connect_error);
 				}
 
 				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -59,7 +59,7 @@
 
 						if ($result->num_rows == 1) {
 								$row = $result->fetch_assoc();
-								if ($password === $row['password']) {
+								if (password_verify($password, $row['password'])) {
 										$_SESSION['user'] = $row['member_id'];
 										header('Location: index.php');
 										exit();
