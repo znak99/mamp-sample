@@ -22,7 +22,7 @@
             if (isset($_SESSION['user'])) {
               echo "<a href='/login.php' class='btn btn-outline-primary'>投稿</a>";
               echo "<a href='/login.php' class='btn btn-outline-primary'>マイページ</a>";
-              echo "<a href='/login.php' class='btn btn-outline-primary'>ログアウト</a>";
+              echo "<a href='/logout.php' class='btn btn-outline-primary'>ログアウト</a>";
             } else {
               echo "<a href='/login.php' class='btn btn-outline-primary'>ログイン</a>";
             }
