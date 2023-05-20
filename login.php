@@ -15,7 +15,7 @@
 				<a href="/" class="btn btn-outline-danger">戻る</a>
 			</nav>
 
-			<form>
+			<form action="" method="POST">
 				<div class="form-group">
 					<label for="exampleInputEmail1">Email address</label>
 					<input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="メールアドレス">
@@ -33,6 +33,44 @@
 				</div>
 			</form>
 
+			<?php
+				session_start();
+
+				$servername = "localhost";
+				$username = "bulletin";
+				$password = "bulletin";
+				$dbname = "php_bulletin_board";
+
+				$conn = new mysqli($servername, $username, $password, $dbname);
+
+				if ($conn->connect_error) {
+						die("MySQL 연결 실패: " . $conn->connect_error);
+				}
+
+				if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+						$email = $_POST['email'];
+						$password = $_POST['password'];
+
+						$query = "SELECT * FROM members WHERE email = ?";
+						$stmt = $conn->prepare($query);
+						$stmt->bind_param("s", $email);
+						$stmt->execute();
+						$result = $stmt->get_result();
+
+						if ($result->num_rows == 1) {
+								$row = $result->fetch_assoc();
+								if ($password === $row['password']) {
+										$_SESSION['user'] = $row['member_id'];
+										header('Location: index.php');
+										exit();
+								} else {
+										echo 'パスワードが間違っています。';
+								}
+						} else {
+								echo "登録していないメールアドレスです。";
+						}
+				}
+				?>
 		</div>
 	</body>
 </html>
