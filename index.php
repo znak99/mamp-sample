@@ -20,7 +20,7 @@
         <div class="btn-group" role="group" aria-label="Basic example">
           <?php
             if (isset($_SESSION['user'])) {
-              echo "<a href='/login.php' class='btn btn-outline-primary'>投稿</a>";
+              echo "<a href='/create-post.php' class='btn btn-outline-primary'>投稿</a>";
               echo "<a href='/login.php' class='btn btn-outline-primary'>マイページ</a>";
               echo "<a href='/logout.php' class='btn btn-outline-primary'>ログアウト</a>";
             } else {
@@ -32,20 +32,47 @@
       </nav>
 
       <div class="d-flex flex-column align-items-center justify-content-center">
-      <?php for ($i = 0; $i < 20; $i++): ?>
-          <div class="card m-3">
-            <div class="card-header">
-              Quote
-            </div>
-            <div class="card-body">
-              <blockquote class="blockquote mb-0">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
-              </blockquote>
-            </div>
-          </div>
-        <?php endfor ?>
-        </div>
+        <?php
+          $servername = "localhost";
+          $username = "bulletin";
+          $password = "bulletin";
+          $dbname = "php_bulletin_board";
+
+          $conn = new mysqli($servername, $username, $password, $dbname);
+
+          if ($conn->connect_error) {
+            die("MySQL接続失敗: " . $conn->connect_error);
+          }
+
+          $sql = "SELECT p.*, m.name FROM Posts p INNER JOIN members m ON p.member_id = m.member_id";
+          $result = $conn->query($sql);
+
+          if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+              $title = $row["title"];
+              $content = $row["content"];
+              $author = $row["name"];
+
+              $maxContentLength = 100;
+              $trimmedContent = mb_strimwidth($content, 0, $maxContentLength, '...');
+
+              echo '<div class="card m-3 w-70 h-50">';
+              echo '<div class="card-header">' . $title . '</div>';
+              echo '<div class="card-body">';
+              echo '<blockquote class="blockquote mb-0">';
+              echo '<p>' . $trimmedContent . '</p>';
+              echo '<footer class="blockquote-footer">' . $author . '</footer>';
+              echo '</blockquote>';
+              echo '</div>';
+              echo '</div>';
+            }
+          } else {
+            echo "まだ投稿していません。";
+          }
+
+          $conn->close();
+        ?>
+      </div>
     </div>
   </body>
 </html>
