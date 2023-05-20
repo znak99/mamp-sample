@@ -11,8 +11,10 @@
     <div class="container-fluid">
 
       <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand">掲示板</a>
-        <a href="" class="btn btn-outline-primary">ログイン</a>
+        <a class="navbar-brand">
+          <p class="h2">掲示板</p>
+        </a>
+        <a href="/login.php" class="btn btn-outline-primary">ログイン</a>
       </nav>
 
       <div class="d-flex flex-column align-items-center justify-content-center">
